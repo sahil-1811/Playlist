@@ -8,6 +8,6 @@ export const getSongbyTitle = (title) => {
     return axios.get(`http://localhost:5000/songs/${title}`);
 }
 
-export const postRatings = (title) =>{
-    return axios.post(`http://localhost:5000/songs/${title}/rate`)
+export const postRating = (title,rating) =>{
+    return axios.post(`http://localhost:5000/songs/${title}/rate`,{"star_rating": rating})
 }

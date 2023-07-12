@@ -10,6 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path = "/" element = {<pages.Home />}></Route>
+          <Route path='/findSong' element={<pages.GetSong />}></Route>
         </Routes>
       </Router>
     </div>

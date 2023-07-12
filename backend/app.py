@@ -45,6 +45,7 @@ def get_songs():
     songs = paginated_table.to_dict('index')
     # print(songs)
 
+    # return jsonify(songs.values())
     return list(songs.values())
 
 #1.2.2 Given a title as input, return all the attributes of that song
@@ -53,7 +54,7 @@ def get_songs():
 def get_song_by_title(title):
     song = table[table['title'] == title].to_dict('index')
     if len(song) > 0:
-        return jsonify(song)
+        return list(song.values())
     else:
         return jsonify({'message' : 'Song not found'}), 404
     
