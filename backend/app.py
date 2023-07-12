@@ -21,6 +21,7 @@ def generate_table(json_file):
         json_data = json.load(f)
         normalized_data = normalize_json(json_data)
         df = pd.DataFrame.from_dict(normalized_data)
+        df['star_rating'] = ""
         return df.transpose()
     
 json_file = 'playlist.json'
@@ -53,6 +54,23 @@ def get_song_by_title(title):
         return jsonify(song)
     else:
         return jsonify({'message' : 'Song not found'}), 404
+    
+@app.route('/songs/<title>/rate' , methods = ['POST'])
+
+def rate_song(title):
+    song = table[table['title'] == title].index
+
+    if len(song) > 0:
+        star_rating = int(request.get_json()['star_rating'])
+        if not star_rating:
+            return jsonify({'message' : 'Rating not found'}),404
+        elif 0 < star_rating < 6:
+            table.loc[song,'star_rating'] = star_rating
+            return jsonify({'message': 'Song rated successfully'}),200
+        else:
+            return jsonify({'message': 'Invalid star rating. Must be between 1 and 5.'}), 400
+    else:
+        return jsonify({'message': 'Song not found'}), 404
 
 if __name__ == '__main__':
     app.run(debug = True)
