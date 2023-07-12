@@ -1,10 +1,12 @@
 import json
 import pandas as pd
 from flask import Flask,jsonify,request
+from flask_cors import CORS
 
 
 app = Flask(__name__)
-
+cors=CORS(app)
+app.config['CORS_HEADERS'] ='Content-Type'
 #1.1 Preprocessing Data
 
 def normalize_json(json_data):
@@ -43,7 +45,7 @@ def get_songs():
     songs = paginated_table.to_dict('index')
     # print(songs)
 
-    return jsonify(songs)
+    return list(songs.values())
 
 #1.2.2 Given a title as input, return all the attributes of that song
 
