@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 
 const Home = () =>{
-    const [page,setPage] = useState(1)
+    const [page,setPage] = useState()
     const [rows,setRows] = useState([])
     const [message, setMessage] = useState(null);
     const [open, setOpen] = React.useState(false);

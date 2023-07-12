@@ -36,17 +36,23 @@ print(table)
 @app.route('/songs',methods=['GET'])
 def get_songs():
     page = int(request.args.get('page',default = 1))
-    per_page = int(request.args.get('per_page',default = 10))
+    if page == 1:
+        songs = table.to_dict('index')
+        return list(songs.values())
+        # return jsonify(songs)
+    else:
 
-    start_index = (page - 1) * per_page
-    end_index = start_index + per_page
+        per_page = int(request.args.get('per_page',default = 10))
 
-    paginated_table = table.iloc[start_index:end_index]
-    songs = paginated_table.to_dict('index')
-    # print(songs)
+        start_index = (page - 1) * per_page
+        end_index = start_index + per_page
 
-    # return jsonify(songs.values())
-    return list(songs.values())
+        paginated_table = table.iloc[start_index:end_index]
+        songs = paginated_table.to_dict('index')
+        # print(songs)
+        return list(songs.values())
+        # return jsonify(songs)
+       
 
 #1.2.2 Given a title as input, return all the attributes of that song
 
@@ -55,8 +61,9 @@ def get_song_by_title(title):
     song = table[table['title'] == title].to_dict('index')
     if len(song) > 0:
         return list(song.values())
+        return jsonify(song)
     else:
-        return jsonify({'message' : 'Song not found'}), 404
+        return jsonify({'message' : 'Song not found'}), 200
     
 @app.route('/songs/<title>/rate' , methods = ['POST'])
 

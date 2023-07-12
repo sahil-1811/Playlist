@@ -19,11 +19,8 @@ const GetSong = () => {
     console.log(data);
     if(data){
         setRows(data)
-    }
-    else{
-      console.log('here');
-      setMessage("Song Not Found!")
-      setOpen(true)
+        setMessage(data.message)
+        setOpen(true)
     }
   };
 
