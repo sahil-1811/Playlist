@@ -4,20 +4,26 @@ import { DataGrid } from "@mui/x-data-grid";
 import { TextField, Snackbar, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
+import { CSVLink, CSVDownload } from "react-csv";
 
 const Home = () =>{
-    const [page,setPage] = useState()
+    const [page,setPage] = useState(1)
     const [rows,setRows] = useState([])
     const [message, setMessage] = useState(null);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [allData, setAllData] = useState([]);
 
     useEffect(()=>{
         const fetchSongs = async () =>{
             try{
                 const {data} = await api.routes.getAllSongs(page)
-                console.log(data)
-
-                setRows(data)
+                // console.log(typeof data)
+                if(typeof data === 'object'){
+                  setRows(data)
+                }
+                const response = await api.routes.getAllData();
+                // console.log(typeof response.data);
+                setAllData(response.data)                
             }
             catch (error) {
                 console.log(error)
@@ -29,7 +35,8 @@ const Home = () =>{
     const changeRating = async (title, value) => {
         const { data } = await api.routes.postRating(title, value);
         // console.log(data);
-        setMessage(data.message);
+        setRows(data)
+        setMessage("Song rated successfully");
         setOpen(true);
       };
 
@@ -70,7 +77,7 @@ const Home = () =>{
         width: 80,
         },
         {
-        field: "ratings",
+        field: "star_rating",
         headerName: "Ratings",
         width: 127,
         disableClickEventBubbling: true,
@@ -81,7 +88,7 @@ const Home = () =>{
                 id="outlined-basic"
                 variant="outlined"
                 onChange={(e) => changeRating(row.title, e.target.value)}
-                value={row.rating}
+                value={row.star_rating}
                 InputProps={{ inputProps: { min: 0, max: 5 } }}
             />
             </div>
@@ -111,7 +118,16 @@ const Home = () =>{
             </React.Fragment>
           );
 
+    const handleNext = (e) => {
+      e.preventDefault();
+      console.log(page);
+      setPage(page+1)
+    }
 
+    const handlePrevious = (e) => {
+      e.preventDefault();
+      setPage(page-1)
+    }
 
     if (rows) {
         return (
@@ -149,6 +165,9 @@ const Home = () =>{
               }}
               pageSizeOptions={[5, 10]}
             />
+            <Button variant="contained" onClick={handlePrevious}>Previous Page</Button>
+            <Button variant="contained" onClick={handleNext} style={{marginLeft: "20px"}}>Next Page</Button>
+            {allData ? <CSVLink data={allData}><Button variant="contained" style={{marginLeft: "200px"}}>Download Data</Button></CSVLink> : ""}
           </div>
           </div>
         );

@@ -27,7 +27,8 @@ const GetSong = () => {
   const changeRating = async (title, value) => {
     const { data } = await api.routes.postRating(title, value);
     // console.log(data);
-    setMessage(data.message);
+    setRows(data)
+    setMessage("Song rated successfully");
     setOpen(true);
   };
 
@@ -89,11 +90,11 @@ const GetSong = () => {
       width: 80,
     },
     {
-      field: "ratings",
+      field: "star_rating",
       headerName: "Ratings",
-      //   type: "number",
+      // type: "number",
       width: 127,
-      disableClickEventBubbling: true,
+      // disableClickEventBubbling: true,
       renderCell: ({ row }) => (
         <div>
           <TextField
@@ -101,7 +102,7 @@ const GetSong = () => {
             id="outlined-basic"
             variant="outlined"
             onChange={(e) => changeRating(row.title, e.target.value)}
-            value={row.rating}
+            value={row.star_rating}
             InputProps={{ inputProps: { min: 0, max: 5 } }}
           />
         </div>
