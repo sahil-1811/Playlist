@@ -61,9 +61,10 @@ def get_song_by_title(title):
     song = table[table['title'] == title].to_dict('index')
     if len(song) > 0:
         return list(song.values())
-        return jsonify(song)
+        # return jsonify(song)
     else:
         return jsonify({'message' : 'Song not found'}), 200
+    # return jsonify({'message' : 'Song not found'}), 400
     
 @app.route('/songs/<title>/rate' , methods = ['POST'])
 
@@ -73,7 +74,7 @@ def rate_song(title):
     if len(song) > 0:
         star_rating = int(request.json.get('star_rating', 0))
         if not star_rating:
-            return jsonify({'message' : 'Rating not found'}),404
+            return jsonify({'message' : 'Rating not found'}),400
         elif 0 < star_rating < 6:
             table.loc[song,'star_rating'] = star_rating
             temp = table.to_dict('index')    
@@ -82,7 +83,7 @@ def rate_song(title):
         else:
             return jsonify({'message': 'Invalid star rating. Must be between 1 and 5.'}), 400
     else:
-        return jsonify({'message': 'Song not found'}), 404
+        return jsonify({'message': 'Song not found'}), 400
 
 if __name__ == '__main__':
     app.run(debug = True)
